@@ -1,0 +1,45 @@
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Model weights
+*.pt
+*.pth
+*.onnx
+
+# Uploaded videos
+uploads/
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Generated outputs
+outputs/
+runs/
+database/vector_store/
+
+# Generated embeddings and indexes
+*.npy
+*.index
+
+# IDE and system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Streamlit secrets
+.streamlit/secrets.toml
