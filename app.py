@@ -33,7 +33,10 @@ st.markdown("""
 <style>
 
 .stApp {
-    background: linear-gradient(135deg, #0b1020, #111827);
+    background:
+        radial-gradient(ellipse at top left, #172554 0%, transparent 45%),
+        linear-gradient(135deg, #080d1b, #111827 55%, #17112d);
+    color: #f1f5f9;
 }
 
 header[data-testid="stHeader"] {
@@ -43,21 +46,23 @@ header[data-testid="stHeader"] {
 .block-container {
     padding-top: 2rem;
     padding-bottom: 3rem;
-    max-width: 1300px;
+    max-width: 1400px;
 }
 
 .hero {
-    padding: 30px;
-    border-radius: 18px;
-    background: linear-gradient(120deg, #172554, #312e81, #4c1d95);
-    border: 1px solid #4338ca;
-    margin-bottom: 25px;
+    padding: 38px;
+    border-radius: 22px;
+    background: linear-gradient(120deg, #172554, #312e81, #581c87);
+    border: 1px solid #6366f1;
+    box-shadow: 0 12px 35px rgba(79, 70, 229, 0.18);
+    margin-bottom: 28px;
 }
 
 .hero h1 {
     color: white;
-    font-size: 38px;
-    margin-bottom: 8px;
+    font-size: 40px;
+    font-weight: 800;
+    margin-bottom: 10px;
 }
 
 .hero p {
@@ -65,54 +70,104 @@ header[data-testid="stHeader"] {
     font-size: 16px;
 }
 
+.hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 13px;
+    border-radius: 20px;
+    color: #e0e7ff;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
 .section-title {
     color: #e0e7ff;
     font-size: 23px;
-    font-weight: 700;
-    margin-top: 20px;
-    margin-bottom: 12px;
+    font-weight: 750;
+    margin-top: 22px;
+    margin-bottom: 14px;
 }
 
 .info-card {
-    background: #172033;
+    background: linear-gradient(145deg, #172033, #111827);
     padding: 20px;
-    border-radius: 14px;
-    border: 1px solid #29364f;
-    margin-bottom: 12px;
+    border-radius: 16px;
+    border: 1px solid #334155;
+    margin-bottom: 14px;
 }
 
-.stButton > button {
+.stButton > button,
+.stDownloadButton > button {
     background: linear-gradient(90deg, #4f46e5, #7c3aed);
     color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-weight: 600;
-    width: 100%;
+    border: 1px solid #6366f1;
+    border-radius: 11px;
+    padding: 11px 20px;
+    font-weight: 650;
+    transition: 0.2s;
 }
 
-.stButton > button:hover {
-    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+.stButton > button:hover,
+.stDownloadButton > button:hover {
+    background: linear-gradient(90deg, #6366f1, #9333ea);
+    border: 1px solid #a78bfa;
     color: white;
-    border: none;
 }
 
 [data-testid="stFileUploader"] {
     background: #172033;
     padding: 18px;
-    border-radius: 14px;
+    border-radius: 15px;
     border: 1px dashed #6366f1;
 }
 
 [data-testid="stSidebar"] {
-    background: #0f172a;
+    background: linear-gradient(180deg, #0f172a, #111827);
+    border-right: 1px solid #29364f;
 }
 
 [data-testid="stMetric"] {
+    background: linear-gradient(145deg, #1e293b, #172033);
+    padding: 18px;
+    border-radius: 15px;
+    border: 1px solid #334155;
+}
+
+[data-testid="stMetricValue"] {
+    color: #c4b5fd;
+    font-weight: 800;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #cbd5e1;
+}
+
+div[data-testid="stExpander"] {
     background: #172033;
-    padding: 15px;
+    border: 1px solid #334155;
     border-radius: 12px;
-    border: 1px solid #29364f;
+}
+
+.stTextInput input {
+    border-radius: 10px;
+}
+
+div[data-testid="stVideo"] {
+    border: 1px solid #475569;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+hr {
+    border-color: #334155;
+}
+
+.footer {
+    text-align: center;
+    color: #94a3b8;
+    padding: 15px;
+    font-size: 13px;
 }
 
 </style>
@@ -120,43 +175,48 @@ header[data-testid="stHeader"] {
 
 
 # SESSION STATE
-if "processed" not in st.session_state:
-    st.session_state.processed = False
+defaults = {
+    "processed": False,
+    "answer": None,
+    "video_folder": None,
+    "upload_id": None,
+    "video_filename": None
+}
 
-if "answer" not in st.session_state:
-    st.session_state.answer = None
+for key, value in defaults.items():
 
-if "video_folder" not in st.session_state:
-    st.session_state.video_folder = None
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 
 # SIDEBAR
 with st.sidebar:
 
-    st.title("🎥 AI Investigator")
+    st.markdown("# 🎥 AI Investigator")
 
     st.caption("VIDEO INTELLIGENCE PLATFORM")
 
     st.divider()
 
-    st.markdown("### Project Modules")
+    st.markdown("### 🧩 Project Modules")
 
     st.write("🔍 YOLO Object Detection")
     st.write("🧠 BLIP Scene Analysis")
     st.write("🎯 ByteTrack Tracking")
     st.write("📚 FAISS Semantic Search")
     st.write("🤖 Gemini RAG")
+    st.write("📄 PDF Report Generation")
 
     st.divider()
 
-    st.markdown("### System Status")
+    st.markdown("### ⚙️ System Status")
 
     st.success("Video Engine Ready")
     st.success("Vector Search Ready")
 
     st.divider()
 
-    if st.button("🔄 New Investigation"):
+    if st.button("🔄 New Investigation", use_container_width=True):
 
         st.session_state.processed = False
         st.session_state.video_folder = None
@@ -166,29 +226,39 @@ with st.sidebar:
 
         st.rerun()
 
-    st.caption("AI Scene Investigator | BCA AI & ML")
+    st.divider()
+
+    st.caption("Developed as a BCA AI & ML Project")
 
 
 # HERO SECTION
 st.markdown("""
 <div class="hero">
+
+    <div class="hero-tag">
+        AI POWERED VIDEO INTELLIGENCE
+    </div>
+
     <h1>🎥 AI Scene Investigator</h1>
+
     <p>
-        Understand videos using Computer Vision,
-        Deep Learning and Retrieval-Augmented Generation.
+        Transform ordinary videos into searchable intelligence
+        using Computer Vision, Deep Learning and
+        Retrieval-Augmented Generation.
     </p>
+
 </div>
 """, unsafe_allow_html=True)
 
 
-# VIDEO UPLOAD
+# UPLOAD SECTION
 st.markdown(
-    '<div class="section-title">📁 Upload Your Video</div>',
+    '<div class="section-title">📁 Video Investigation</div>',
     unsafe_allow_html=True
 )
 
 uploaded_video = st.file_uploader(
-    "Choose a video to investigate",
+    "Upload a video to begin your investigation",
     type=["mp4", "avi", "mov", "mkv"]
 )
 
@@ -197,7 +267,7 @@ if uploaded_video is not None:
 
     upload_id = uploaded_video.name + str(uploaded_video.size)
 
-    if st.session_state.get("upload_id") != upload_id:
+    if st.session_state.upload_id != upload_id:
 
         st.session_state.upload_id = upload_id
         st.session_state.processed = False
@@ -209,27 +279,32 @@ if uploaded_video is not None:
 
     with col1:
 
-        st.markdown("### 🎬 Video Preview")
+        st.markdown("### 🎬 Original Video")
 
         st.video(uploaded_video.getvalue())
 
     with col2:
 
-        st.markdown("### 📄 Video Information")
+        st.markdown("### 📋 Video Information")
 
-        st.write("**Filename:**", uploaded_video.name)
+        st.markdown('<div class="info-card">', unsafe_allow_html=True)
 
+        st.write("**Filename**")
+        st.write(uploaded_video.name)
+
+        st.write("**File Size**")
         st.write(
-            "**File size:**",
-            round(uploaded_video.size / (1024 * 1024), 2),
-            "MB"
+            f"{uploaded_video.size / (1024 * 1024):.2f} MB"
         )
 
-        st.write("**Status:** Ready for analysis")
+        st.write("**Supported Formats**")
+        st.write("MP4, AVI, MOV, MKV")
 
-        st.write("**Supported:** MP4, AVI, MOV, MKV")
+        st.success("Video Ready for Investigation")
 
-        if st.button("🚀 Process Video"):
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        if st.button("🚀 Start Video Investigation", use_container_width=True):
 
             os.makedirs("uploads", exist_ok=True)
 
@@ -249,13 +324,21 @@ if uploaded_video is not None:
 
             try:
 
+                progress = st.progress(0, text="Starting investigation...")
+
                 with st.spinner(
-                    "Analyzing video... Please wait."
+                    "Running video analysis, object tracking and AI processing..."
                 ):
+
+                    progress.progress(20, text="Extracting video frames...")
 
                     from modules.video_pipeline import process_video_pipeline
 
+                    progress.progress(40, text="Running AI analysis...")
+
                     video_id = process_video_pipeline(video_path)
+
+                    progress.progress(100, text="Investigation completed!")
 
                 if video_id:
 
@@ -267,9 +350,7 @@ if uploaded_video is not None:
                     st.session_state.processed = True
                     st.session_state.answer = None
 
-                    st.success(
-                        "Video analysis completed successfully!"
-                    )
+                    st.success("Video investigation completed successfully!")
 
                     st.rerun()
 
@@ -279,12 +360,12 @@ if uploaded_video is not None:
 
             except Exception as e:
 
-                st.error("An error occurred during processing.")
+                st.error("An error occurred during video processing.")
                 st.exception(e)
 
 
 # ANALYSIS SECTION
-if st.session_state.get("processed", False):
+if st.session_state.processed:
 
     video_folder = st.session_state.video_folder
 
@@ -299,9 +380,42 @@ if st.session_state.get("processed", False):
             events = json.load(file)
 
         if not isinstance(events, list):
+
             st.error("Invalid event data format.")
             st.stop()
 
+        # ANNOTATED VIDEO
+        st.divider()
+
+        st.markdown(
+            '<div class="section-title">🎯 AI Object Detection & Tracking</div>',
+            unsafe_allow_html=True
+        )
+
+        annotated_video_path = os.path.join(
+            video_folder,
+            "annotated_video.mp4"
+        )
+
+        if os.path.exists(annotated_video_path):
+
+            st.success("YOLO Object Detection and ByteTrack tracking completed!")
+
+            st.video(annotated_video_path)
+
+            st.caption(
+                "Annotated video: bounding boxes, object labels, "
+                "confidence scores and tracking IDs where available."
+            )
+
+        else:
+
+            st.warning(
+                "Annotated video was not found. "
+                "Please process the video again."
+            )
+
+        # OBJECT ANALYTICS
         object_counts = {}
 
         for event in events:
@@ -314,17 +428,19 @@ if st.session_state.get("processed", False):
 
         total_detections = sum(object_counts.values())
 
-        # ANALYTICS
         st.divider()
 
         st.markdown(
-            '<div class="section-title">📊 Video Analytics</div>',
+            '<div class="section-title">📊 Video Analytics Dashboard</div>',
             unsafe_allow_html=True
         )
 
         col1, col2, col3, col4 = st.columns(4)
 
-        col1.metric("Observations", len(events))
+        col1.metric(
+            "Observations",
+            len(events)
+        )
 
         col2.metric(
             "Object Categories",
@@ -345,7 +461,7 @@ if st.session_state.get("processed", False):
             "Detection totals are summed across sampled video frames."
         )
 
-        # OBJECT DETECTION
+        # OBJECT DETECTION STATISTICS
         st.markdown(
             '<div class="section-title">🔍 Detected Objects</div>',
             unsafe_allow_html=True
@@ -359,9 +475,12 @@ if st.session_state.get("processed", False):
 
                 with columns[i % len(columns)]:
 
-                    st.metric(name.title(), count)
+                    st.metric(
+                        name.title(),
+                        count
+                    )
 
-            st.markdown("### 📈 Object Detection Statistics")
+            st.markdown("### 📈 Object Distribution")
 
             st.bar_chart(
                 object_counts,
@@ -376,13 +495,13 @@ if st.session_state.get("processed", False):
         st.divider()
 
         st.markdown(
-            '<div class="section-title">⏱️ Event Timeline</div>',
+            '<div class="section-title">⏱️ Event Investigation Timeline</div>',
             unsafe_allow_html=True
         )
 
         search_event = st.text_input(
             "🔎 Search scene observations",
-            placeholder="Search for person, car, road, etc."
+            placeholder="Search for person, bottle, chair, etc."
         )
 
         filtered_events = []
@@ -396,6 +515,7 @@ if st.session_state.get("processed", False):
                 search_event.lower() in description.lower()
                 or search_event.lower() in objects.lower()
             ):
+
                 filtered_events.append(event)
 
         st.caption(
@@ -408,13 +528,18 @@ if st.session_state.get("processed", False):
                 f"⏱️ {event.get('timestamp', 'Unknown')} seconds"
             ):
 
-                st.write(
-                    "**Scene:**",
-                    event.get("description", "No description available")
-                )
+                st.markdown("**📝 Scene Description**")
 
                 st.write(
-                    "**Detected objects:**",
+                    event.get(
+                        "description",
+                        "No description available"
+                    )
+                )
+
+                st.markdown("**🔍 Detected Objects**")
+
+                st.json(
                     event.get("objects", {})
                 )
 
@@ -422,19 +547,24 @@ if st.session_state.get("processed", False):
         st.divider()
 
         st.markdown(
-            '<div class="section-title">🤖 Ask AI About Your Video</div>',
+            '<div class="section-title">🤖 AI Investigation Assistant</div>',
             unsafe_allow_html=True
+        )
+
+        st.caption(
+            "Ask questions about the uploaded video using semantic search and RAG."
         )
 
         with st.form("question_form"):
 
             question = st.text_input(
-                "Ask anything about the video",
-                placeholder="Example: Describe what is happening..."
+                "Ask anything about your video",
+                placeholder="Example: What objects are visible in this video?"
             )
 
             submitted = st.form_submit_button(
-                "✨ Generate AI Answer"
+                "✨ Generate AI Answer",
+                use_container_width=True
             )
 
         if submitted:
@@ -444,7 +574,7 @@ if st.session_state.get("processed", False):
                 try:
 
                     with st.spinner(
-                        "Searching video evidence and generating answer..."
+                        "Searching video evidence and generating AI response..."
                     ):
 
                         from modules.rag_pipeline import ask_video
@@ -465,17 +595,23 @@ if st.session_state.get("processed", False):
 
                 st.warning("Please enter a question.")
 
-        # DISPLAY ANSWER
-        if st.session_state.get("answer"):
+        if st.session_state.answer:
 
-            st.markdown("### 💬 AI Response")
+            st.markdown("### 💬 Investigation Result")
+
+            st.markdown(
+                '<div class="info-card">',
+                unsafe_allow_html=True
+            )
 
             st.markdown(st.session_state.answer)
+
+            st.markdown('</div>', unsafe_allow_html=True)
 
         else:
 
             st.info(
-                "Ask a question above to generate an AI investigation response."
+                "Enter a question above to generate an AI investigation response."
             )
 
         # PDF REPORT
@@ -664,7 +800,7 @@ if st.session_state.get("processed", False):
             pdf_data = create_pdf_report()
 
             st.download_button(
-                label="📄 Download PDF Report",
+                label="📄 Download PDF Investigation Report",
                 data=pdf_data,
                 file_name="AI_Investigation_Report.pdf",
                 mime="application/pdf",
@@ -678,18 +814,26 @@ if st.session_state.get("processed", False):
 
     else:
 
-        st.error("Events file not found. Please process the video again.")
+        st.error(
+            "Events file not found. Please process the video again."
+        )
 
 else:
 
     st.info(
-        "Upload a video above and click Process Video to begin your investigation."
+        "Upload a video above and click Start Video Investigation to begin."
     )
 
 
 # FOOTER
 st.divider()
 
-st.caption(
-    "AI Scene Investigator | Computer Vision + NLP + RAG"
-)
+st.markdown("""
+<div class="footer">
+    🎥 AI Scene Investigator
+    <br>
+    Computer Vision • Deep Learning • NLP • RAG
+    <br>
+    BCA Artificial Intelligence & Machine Learning Project
+</div>
+""", unsafe_allow_html=True)

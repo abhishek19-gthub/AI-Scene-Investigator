@@ -142,3 +142,24 @@ BCA – Artificial Intelligence and Machine Learning
 ## 📌 Project Status
 
 Developed as an AI and Machine Learning project.
+
+
+## 📸 Project Screenshots
+
+### 1. Main Dashboard
+![Main Dashboard](screenshots/01_main_dashboard.png)
+
+### 2. Annotated Video – Object Detection & Tracking
+![Annotated Video](screenshots/02_annotated_video.png)
+
+### 3. Video Analytics Dashboard
+![Video Analytics](screenshots/03_video_analytics.png)
+
+### 4. Event Investigation Timeline
+![Event Investigation](screenshots/04_event_investigation.png)
+
+### 5. AI Investigation Assistant
+![AI Question Answering](screenshots/05_ai_question_answering.png)
+
+### 6. PDF Investigation Report
+![PDF Report](screenshots/06_pdf_report.png)
